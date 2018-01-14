@@ -1,0 +1,61 @@
+---
+gpus: '0,1,2,3'
+batch_size: 128
+frequent: 100
+kv_store: 'device'
+memonger: False
+retrain: False
+model_load_epoch: 0
+num_epoch: 300
+network:
+  num_stages: 3
+  units:
+  - 1
+  - 1
+  - 1
+  filter_list:
+  - 64
+  - 256
+  - 512
+  - 1024
+  dropout: 0.0
+AOG:
+  dims:
+  - 4
+  - 4
+  - 4
+  min_sizes:
+  - 1
+  - 1
+  - 1
+  tnode_max_size:
+  - 4
+  - 4
+  - 4
+  or_node_op: 'sum'
+  USE_OR_NODE_CONV: True
+  TURN_OFF_UNIT_OR_NODE: True
+  Preprocess_Op: ''
+  or_node_weight_type: 'se_nodewise'
+  Tnode_Op: 'Tnode_Op1'
+  Anode_Op: 'Anode_Op1'
+  Onode_Op: 'Onode_Op1'
+  Tnode_basic_unit: 'basic_unit5'
+  Anode_basic_unit: 'basic_unit5'
+  Onode_basic_unit: 'basic_unit5'
+train:
+  bn_mom: 0.9
+  lr: 0.1
+  mom: 0.9
+  wd: 0.0001
+  workspace: 512
+  lr_steps:
+  - 150
+  - 225
+dataset:
+  data_type: 'cifar100'
+  data_dir: './data/cifar100'
+  num_classes: 100
+  num_examples: 50000
+  aug_level: 1
+
