@@ -1,7 +1,7 @@
 # AOGNets: Deep AND-OR Grammar Network for Visual Recognition
 This repository contains the code and trained models of:
 
-Xilai Li, Tianfu Wu*, Xi Song, and Hamid Krim, AOGNets: "Deep AND-OR Grammar Networks for Visual Recognition". ([arXiv:1711.05847](arXiv:1711.05847))
+Xilai Li, Tianfu Wu*, Xi Song, and Hamid Krim, AOGNets: "Deep AND-OR Grammar Networks for Visual Recognition". ([arXiv:1711.05847](https://arxiv.org/abs/1711.05847))
 
 ## Install MXNet
 ```shell
