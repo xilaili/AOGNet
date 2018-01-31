@@ -112,10 +112,13 @@ def random_weight(childfeats, num_filter, cfg, name):
 
 
 def Tnode_Op1(data, cfg, aog, node, NodeIdtoSym, in_slices, out_slices, stride=(1, 1), bn_mom=0.9, workspace=512, name=''):
+    ''' slice channel first and perform operation on each slice '''
+    # slice
     arr = aog.primitive_set[node.array_idx]
     in_channels = in_slices[arr.x2 + 1] - in_slices[arr.x1]
     Tnode_feat = mx.symbol.slice_axis(data=data, axis=1, begin=in_slices[arr.x1], end=in_slices[arr.x2 + 1],
                                       name=name + 'Tnode_{}_feat_slice'.format(node.id))
+    # perform an operation
     out_channels = out_slices[arr.x2 + 1] - out_slices[arr.x1]
     Tnode_out = eval(cfg.AOG.Tnode_basic_unit)(data=Tnode_feat, cfg=cfg, num_filters=out_channels, in_channels=in_channels,
                                                stride=stride, bn_mom=bn_mom, workspace=workspace,
@@ -124,10 +127,16 @@ def Tnode_Op1(data, cfg, aog, node, NodeIdtoSym, in_slices, out_slices, stride=(
 
 
 def Tnode_Op2(data, cfg, aog, node, NodeIdtoSym, in_slices, out_slices, stride=(1, 1), bn_mom=0.9, workspace=512, name=''):
+    '''
+    using 1x1 conv to get slices and perform operation on each slice
+    need more parameters than Op1
+    '''
+    # slice
     arr = aog.primitive_set[node.array_idx]
     in_channels = in_slices[arr.x2 + 1] - in_slices[arr.x1]
     Tnode_feat = conv_bn_relu(data=data, cfg=cfg, num_filters=in_channels, kernel=(1, 1), pad=(0, 0), bn_mom=bn_mom,
                               workspace=workspace, name=name + "Tnode_{}_feat".format(node.id))
+    # perform an operation
     out_channels = out_slices[arr.x2 + 1] - out_slices[arr.x1]
     Tnode_out = eval(cfg.AOG.Tnode_basic_unit)(data=Tnode_feat, cfg=cfg, num_filters=out_channels, in_channels=in_channels,
                                                stride=stride, bn_mom=bn_mom, workspace=workspace,
@@ -136,6 +145,9 @@ def Tnode_Op2(data, cfg, aog, node, NodeIdtoSym, in_slices, out_slices, stride=(
 
 
 def Anode_Op1(cfg, aog, node, NodeIdtoSym, in_slices, out_slices, bn_mom=0.9, workspace=512, name=''):
+    '''
+    concat two children and perform an opertion
+    '''
     assert len(node.child_ids) == 2, "And node has exactly two childs"
     # child[0] is left, child[1] is right
     left_feat = NodeIdtoSym[node.child_ids[0]]
@@ -144,7 +156,7 @@ def Anode_Op1(cfg, aog, node, NodeIdtoSym, in_slices, out_slices, bn_mom=0.9, wo
     Anode_concat = mx.symbol.Concat(*[left_feat, right_feat], dim=1, name=name + 'ANode_{}_concat'.format(node.id))
     arr = aog.primitive_set[node.array_idx]
     num_filters = out_slices[arr.x2 + 1] - out_slices[arr.x1]
-    # num_filters = aog.primitive_set[node.array_idx].Length() * out_slice
+    # perform an operation
     Anode_out = eval(cfg.AOG.Anode_basic_unit)(data=Anode_concat, cfg=cfg, num_filters=num_filters,
                                                in_channels=num_filters,
                                                bn_mom=bn_mom, workspace=workspace,
@@ -164,10 +176,9 @@ def Anode_Op2(cfg, aog, node, NodeIdtoSym, in_slices, out_slices, bn_mom=0.9, wo
     right_node = aog.node_set[node.child_ids[1]]
     arr1 = aog.primitive_set[left_node.array_idx]
     num_filters1 = out_slices[arr1.x2 + 1] - out_slices[arr1.x1]
-    # num_filters1 = aog.primitive_set[left_node.array_idx].Length() * out_slice
     arr2 = aog.primitive_set[right_node.array_idx]
     num_filters2 = out_slices[arr2.x2 + 1] - out_slices[arr2.x1]
-    # num_filters2 = aog.primitive_set[right_node.array_idx].Length() * out_slice
+    # operation on both children
     left_feat = eval(cfg.AOG.Anode_basic_unit)(data=left_feat, cfg=cfg, num_filters=num_filters1, in_channels=num_filters1,
                                                bn_mom=bn_mom, workspace=workspace, name=name + "Anode_{}_left".format(node.id))
     right_feat = eval(cfg.AOG.Anode_basic_unit)(data=right_feat, cfg=cfg, num_filters=num_filters2, in_channels=num_filters2,
@@ -192,6 +203,7 @@ def Onode_Op1(cfg, aog, node, NodeIdtoSym, in_slices, out_slices, bn_mom=0.9, wo
             num_filters = out_slices[arr.x2 + 1] - out_slices[arr.x1]
             childfeats = eval(cfg.AOG.or_node_weight_type)(childfeats, num_filters, cfg, name + 'ONode_{}_'.format(node.id))
 
+        # merge all the children nodes by sum/avg/max
         if cfg.AOG.or_node_op == 'sum':
             Onode_out = mx.symbol.ElementWiseSum(*childfeats, name=name + 'ONode_{}_sum'.format(node.id))
         elif cfg.AOG.or_node_op == 'avg':
@@ -207,10 +219,10 @@ def Onode_Op1(cfg, aog, node, NodeIdtoSym, in_slices, out_slices, bn_mom=0.9, wo
                                                  name='ONode_{}_max'.format(node.id))
             Onode_out = (Onode_out_sum + Onode_out_max) / 2.0
 
+    # operation
     if cfg.AOG.USE_OR_NODE_CONV:
         arr = aog.primitive_set[node.array_idx]
         num_filters = out_slices[arr.x2 + 1] - out_slices[arr.x1]
-        # num_filters = aog.primitive_set[node.array_idx].Length() * out_slice
         Onode_out = eval(cfg.AOG.Onode_basic_unit)(data=Onode_out, cfg=cfg, num_filters=num_filters,
                                                    in_channels=num_filters,
                                                    bn_mom=bn_mom, workspace=workspace,

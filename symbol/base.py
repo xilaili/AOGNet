@@ -31,27 +31,25 @@ def bn_relu_conv(data, cfg, num_filters, kernel=(3, 3), stride=(1, 1), pad=(1, 1
     return body
 
 
+#######################
+
+
 # pure conv
-def basic_unit1(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
+def Conv_BN_ReLu(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
     body = conv_bn_relu(data=data, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=stride, pad=(1, 1), bn_mom=bn_mom,
                         workspace=workspace, name=name)
     return body
 
 
-# conv + sc
-def basic_unit2(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
-    body = conv_bn_relu(data=data, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=stride, pad=(1, 1),
-                   bn_mom=bn_mom, workspace=workspace, name=name + "_conv1")
-    body = conv_bn(data=body, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=(1, 1), pad=(1, 1), bn_mom=bn_mom,
-                   workspace=workspace, name=name + "_conv2")
-    return body
-
-# conv x 2 + sc
-def basic_unit3(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
-    body = conv_bn_relu(data=data, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=stride, pad=(1, 1),
-                   bn_mom=bn_mom, workspace=workspace, name=name + "_conv1")
-    body = conv_bn(data=body, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=(1, 1), pad=(1, 1), bn_mom=bn_mom,
-                   workspace=workspace, name=name + "_conv2")
+# conv + sc + bottleneck
+def Bottleneck_ResNet(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
+    ratio = 0.25
+    body = conv_bn_relu(data=data, cfg=cfg, num_filters=int(num_filters*ratio), kernel=(1, 1), stride=(1, 1), pad=(0, 0),
+                        bn_mom=bn_mom, workspace=workspace, name=name + '_bn_top')
+    body = conv_bn_relu(data=body, cfg=cfg, num_filters=int(num_filters*ratio), kernel=(3, 3), stride=stride, pad=(1, 1),
+                        group=1, bn_mom=bn_mom, workspace=workspace, name=name)
+    body = conv_bn(data=body, cfg=cfg, num_filters=num_filters, kernel=(1, 1), stride=(1, 1), pad=(0, 0),
+                   bn_mom=bn_mom, workspace=workspace, name=name + '_bn_bottom')
     if in_channels == num_filters:
         sc = data
     else:
@@ -63,12 +61,12 @@ def basic_unit3(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=51
     return mx.sym.Activation(data=body + sc, act_type='relu', name=name + '_sum_relu')
 
 
-# conv + sc + bottleneck (0.5)
-def basic_unit4(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
+# ResNeXt bottleneck
+def Bottleneck_ResNeXt(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
     body = conv_bn_relu(data=data, cfg=cfg, num_filters=int(num_filters*0.5), kernel=(1, 1), stride=(1, 1), pad=(0, 0),
                         bn_mom=bn_mom, workspace=workspace, name=name + '_bn_top')
     body = conv_bn_relu(data=body, cfg=cfg, num_filters=int(num_filters*0.5), kernel=(3, 3), stride=stride, pad=(1, 1),
-                        group=1, bn_mom=bn_mom, workspace=workspace, name=name)
+                        group=32, bn_mom=bn_mom, workspace=workspace, name=name)
     body = conv_bn(data=body, cfg=cfg, num_filters=num_filters, kernel=(1, 1), stride=(1, 1), pad=(0, 0),
                    bn_mom=bn_mom, workspace=workspace, name=name + '_bn_bottom')
     if in_channels == num_filters:
@@ -80,38 +78,3 @@ def basic_unit4(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=51
         sc._set_attr(mirror_stage='True')
 
     return mx.sym.Activation(data=body + sc, act_type='relu', name=name + '_sum_relu')
-
-
-# conv + sc + bottleneck (0.25)
-def basic_unit5(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
-    body = conv_bn_relu(data=data, cfg=cfg, num_filters=int(num_filters*0.25), kernel=(1, 1), stride=(1, 1), pad=(0, 0),
-                        bn_mom=bn_mom, workspace=workspace, name=name + '_bn_top')
-    body = conv_bn_relu(data=body, cfg=cfg, num_filters=int(num_filters*0.25), kernel=(3, 3), stride=stride, pad=(1, 1),
-                        group=1, bn_mom=bn_mom, workspace=workspace, name=name)
-    body = conv_bn(data=body, cfg=cfg, num_filters=num_filters, kernel=(1, 1), stride=(1, 1), pad=(0, 0),
-                   bn_mom=bn_mom, workspace=workspace, name=name + '_bn_bottom')
-    if in_channels == num_filters:
-        sc = data
-    else:
-        sc = conv_bn(data=data, cfg=cfg, num_filters=num_filters, kernel=(1, 1), stride=stride, pad=(0, 0),
-                     bn_mom=bn_mom, workspace=workspace, name=name + "_sc")
-    if cfg.memonger:
-        sc._set_attr(mirror_stage='True')
-
-    return mx.sym.Activation(data=body + sc, act_type='relu', name=name + '_sum_relu')
-
-
-# group conv (num_group=4)
-def basic_unit6(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
-    body = conv_bn_relu(data=data, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=stride, pad=(1, 1), group=4,
-                        bn_mom=bn_mom, workspace=workspace, name=name)
-    return body
-
-
-# two convs (n->n/2->n)
-def basic_unit7(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
-    body = conv_bn_relu(data=data, cfg=cfg, num_filters=int(0.5*num_filters), kernel=(3, 3), stride=stride, pad=(1, 1),
-                        bn_mom=bn_mom, workspace=workspace, name=name+'_conv1')
-    body = conv_bn_relu(data=body, cfg=cfg, num_filters=num_filters, kernel=(3, 3), stride=(1, 1), pad=(1, 1),
-                        bn_mom=bn_mom, workspace=workspace, name=name+'_conv2')
-    return body

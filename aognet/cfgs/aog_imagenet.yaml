@@ -46,9 +46,9 @@ AOG:
   Tnode_Op: 'Tnode_Op1'
   Anode_Op: 'Anode_Op1'
   Onode_Op: 'Onode_Op1'
-  Tnode_basic_unit: 'basic_unit5'
-  Anode_basic_unit: 'basic_unit5'
-  Onode_basic_unit: 'basic_unit5'
+  Tnode_basic_unit: 'Bottleneck_ResNet'
+  Anode_basic_unit: 'Bottleneck_ResNet'
+  Onode_basic_unit: 'Bottleneck_ResNet'
 train:
   bn_mom: 0.9
   lr: 0.1
@@ -65,4 +65,3 @@ dataset:
   num_classes: 1000
   num_examples: 1281167
   aug_level: 2
-

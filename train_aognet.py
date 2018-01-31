@@ -1,27 +1,25 @@
-import argparse,logging,os
+import argparse,logging,os,pprint
 import mxnet as mx
-import symbol.symbol_aognet as aognet
-import pprint
+import symbol.symbol_aognet as AOGNet
+import aognet.utils.memonger
 from aognet.aog.aog_1d import get_aog
 from aognet.cfgs.config import cfg, read_cfg
 from aognet.loader import *
+from aognet.utils.scheduler import multi_factor_scheduler
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
-def multi_factor_scheduler(begin_epoch, epoch_size, step=[100, 150], factor=0.1):
-    step_ = [epoch_size * (x-begin_epoch) for x in step if x-begin_epoch > 0]
-    return mx.lr_scheduler.MultiFactorScheduler(step=step_, factor=factor) if len(step_) else None
-
-
 def main():
+    # read config
     read_cfg(args.cfg)
     if args.gpus:
         cfg.gpus = args.gpus
     if args.model_path:
         cfg.model_path = args.model_path
     pprint.pprint(cfg)
+
     # get aogs
     aogs = []
     for i in range(len(cfg.AOG.dims)):
@@ -30,11 +28,10 @@ def main():
         aogs.append(aog)
 
     # get symbol
-    symbol = aognet.get_symbol(aogs=aogs, cfg=cfg)
-
+    symbol = AOGNet.get_symbol(aogs=aogs, cfg=cfg)
     # check shapes
     internals = symbol.get_internals()
-    dshape = (cfg.batch_size, 3, 224, 224) if cfg.dataset.data_type == 'imagenet' else (cfg.batch_size, 3, 32, 32)
+    dshape = (cfg.batch_size, 3, 224, 224) if cfg.dataset.data_type == 'imagenet' else (cfg.batch_size, 3, 32, 32) # (32, 32) for cifar10 and cifar100
     _, out_shapes, _ = internals.infer_shape(data=dshape)
     shape_dict = dict(zip(internals.list_outputs(), out_shapes))
     # pprint.pprint(shape_dict)
@@ -58,8 +55,8 @@ def main():
     for k, v in stages_kw.items():
         print('{} has param size: {} M'.format(k, v / 1e6))
 
+    # setup memonger
     if cfg.memonger:
-        import tools.memonger
         dshape_ = (1,) + dshape[1:]
         if args.no_run:
             old_cost = memonger.get_cost(symbol, data=dshape_)
@@ -71,6 +68,8 @@ def main():
     if args.no_run:
         return
 
+
+    # training setup
     kv = mx.kvstore.create(cfg.kv_store)
     devs = mx.cpu() if cfg.gpus is None else [mx.gpu(int(i)) for i in cfg.gpus.split(',')]
     epoch_size = max(int(cfg.dataset.num_examples / cfg.batch_size / kv.num_workers), 1)
@@ -101,13 +100,15 @@ def main():
         context             = devs,
         symbol              = symbol)
 
-    eval_metric = ['acc', 'ce'] if cfg.dataset.data_type in ["cifar10", "cifar100"] else \
-                      ['acc', mx.metric.create('top_k_accuracy', top_k = 5)]
+    if cfg.dataset.data_type in ["cifar10", "cifar100"]:
+        eval_metric = ['acc', 'ce']
+    elif cfg.dataset.data_type == 'imagenet':
+        eval_metric = ['acc', mx.metric.create('top_k_accuracy', top_k = 5)]
 
     model.fit(
         train,
         begin_epoch        = begin_epoch,
-        num_epoch=cfg.num_epoch,  # 200 if config.dataset.data_type == "cifar10" else 120,
+        num_epoch          = cfg.num_epoch,
         eval_data          = val,
         eval_metric        = eval_metric,
         kvstore            = kv,
