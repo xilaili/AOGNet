@@ -1,5 +1,5 @@
 from aognet.aog.aog_1d import *
-from base import *
+from .base import *
 
 
 def get_slice_indice(channels, dim):
@@ -17,7 +17,6 @@ def Preprocess1(data, aog, channels, workspace, name):
     kernels = [(1, 1), (3, 3), (3, 3), (5, 5)]
     pads = [(0, 0), (1, 1), (1, 1), (2, 2)]
     slices = get_slice_indice(channels, dim)
-    print slices
     feats = []
     # slice channels
     for i in range(dim):

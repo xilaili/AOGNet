@@ -1,5 +1,5 @@
-from node import *
-from base import *
+from .node import *
+from .base import *
 from aognet.aog.aog_1d import *
 
 eps = 2e-5

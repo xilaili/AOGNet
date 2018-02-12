@@ -3,7 +3,7 @@ import mxnet as mx
 import symbol.symbol_aognet as AOGNet
 import aognet.utils.memonger
 from aognet.aog.aog_1d import get_aog
-from aognet.cfgs.config import cfg, read_cfg
+from cfgs.config import cfg, read_cfg
 from aognet.loader import *
 from aognet.utils.scheduler import multi_factor_scheduler
 

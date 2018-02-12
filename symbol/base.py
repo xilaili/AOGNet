@@ -63,10 +63,11 @@ def Bottleneck_ResNet(data, cfg, num_filters, in_channels, stride=(1, 1), worksp
 
 # ResNeXt bottleneck
 def Bottleneck_ResNeXt(data, cfg, num_filters, in_channels, stride=(1, 1), workspace=512, bn_mom=0.9, name=''):
-    body = conv_bn_relu(data=data, cfg=cfg, num_filters=int(num_filters*0.5), kernel=(1, 1), stride=(1, 1), pad=(0, 0),
+    ratio, cardinality = 0.5, 4
+    body = conv_bn_relu(data=data, cfg=cfg, num_filters=int(num_filters*ratio), kernel=(1, 1), stride=(1, 1), pad=(0, 0),
                         bn_mom=bn_mom, workspace=workspace, name=name + '_bn_top')
-    body = conv_bn_relu(data=body, cfg=cfg, num_filters=int(num_filters*0.5), kernel=(3, 3), stride=stride, pad=(1, 1),
-                        group=32, bn_mom=bn_mom, workspace=workspace, name=name)
+    body = conv_bn_relu(data=body, cfg=cfg, num_filters=int(num_filters*ratio), kernel=(3, 3), stride=stride, pad=(1, 1),
+                        group=cardinality, bn_mom=bn_mom, workspace=workspace, name=name)
     body = conv_bn(data=body, cfg=cfg, num_filters=num_filters, kernel=(1, 1), stride=(1, 1), pad=(0, 0),
                    bn_mom=bn_mom, workspace=workspace, name=name + '_bn_bottom')
     if in_channels == num_filters:
