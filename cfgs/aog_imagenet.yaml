@@ -1,0 +1,67 @@
+---
+gpus: '0,1,2,3'
+batch_size: 256
+frequent: 100
+kv_store: 'device'
+memonger: True
+retrain: False
+model_path: './model'
+model_load_epoch: 0
+num_epoch: 100
+network:
+  num_stages: 4
+  units:
+  - 1
+  - 1
+  - 1
+  - 1
+  filter_list:
+  - 64
+  - 256
+  - 512
+  - 1024
+  - 2048
+  dropout: 0.0
+AOG:
+  dims:
+  - 4
+  - 4
+  - 4
+  - 4
+  min_sizes:
+  - 1
+  - 1
+  - 1
+  - 1
+  tnode_max_size:
+  - 4
+  - 4
+  - 4
+  - 4
+  or_node_op: 'sum'
+  USE_OR_NODE_CONV: True
+  TURN_OFF_UNIT_OR_NODE: True
+  Preprocess_Op: ''
+  or_node_weight_type: ''
+  Tnode_Op: 'Tnode_Op1'
+  Anode_Op: 'Anode_Op1'
+  Onode_Op: 'Onode_Op1'
+  Tnode_basic_unit: 'Bottleneck_ResNet'
+  Anode_basic_unit: 'Bottleneck_ResNet'
+  Onode_basic_unit: 'Bottleneck_ResNet'
+train:
+  bn_mom: 0.9
+  lr: 0.1
+  mom: 0.9
+  wd: 0.0001
+  workspace: 256
+  lr_steps:
+  - 30
+  - 60
+  - 90
+dataset:
+  data_type: 'imagenet'
+  data_dir: './data/imagenet'
+  num_classes: 1000
+  num_examples: 1281167
+  aug_level: 2
