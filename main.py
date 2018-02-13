@@ -40,20 +40,14 @@ def main():
     shape_dict = dict(zip(internals.list_outputs(), out_shapes))
 
     # count params size
-    stages_kw = {'stage_0': 0.0, 'stage_1': 0.0, 'stage_2': 0.0, 'stage_3': 0.0}
     sum = 0.0
     for k in shape_dict.keys():
         if k.split('_')[-1] in ['weight', 'bias', 'gamma', 'beta']:
             size = 1
             for val in shape_dict[k]:
                 size *= val
-            for key in stages_kw:
-                if key in k:
-                    stages_kw[key] += size
             sum += size
     print('total number of params: {} M'.format(sum / 1e6))
-    for k, v in stages_kw.items():
-        print('{} has param size: {} M'.format(k, v / 1e6))
 
     # setup memonger
     if args.memonger:
@@ -64,9 +58,6 @@ def main():
         if args.no_run:
             new_cost = memonger.get_cost(symbol, data=dshape_)
             print('batch size=1, old cost= {} MB, new cost= {} MB'.format(old_cost, new_cost))
-
-    if args.no_run:
-        return
 
     # training setup
     kv = mx.kvstore.create(args.kv_store)
@@ -126,7 +117,6 @@ if __name__ == "__main__":
     parser.add_argument('--gpus', help='the gpus will be used', type=str, default='0')
     parser.add_argument('--modeldir', help='the location to save model checkpoints', default='./model', type=str)
     parser.add_argument('--kv-store', help='kv-store', type=str, default='device')
-    parser.add_argument('--no-run', action='store_true', default=False, help='stop before training')
     parser.add_argument('--memonger', action='store_true', default=False, help='use memonger to save gpu memory')
     parser.add_argument('--resume', help='resume training start from epoch --, default is 0 (no retrain)', default=0, type=int)
     parser.add_argument('--frequent', help='how many batches per print', default=100, type=int)
