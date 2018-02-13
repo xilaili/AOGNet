@@ -1,33 +1,53 @@
 # AOGNets: Deep AND-OR Grammar Network for Visual Recognition
-This repository contains the code and trained models of:
+This repository contains the code (in MXNet) for: "[AOGNets: Deep AND-OR Grammar Networks for Visual Recognition](https://arxiv.org/abs/1711.05847)" paper by [Xilai Li](https://xilaili.github.io), [Tianfu Wu](http://www4.ncsu.edu/~twu19/)\*, Xi Song and Hamid Krim. (* Corresponding Author)
 
-Xilai Li, Tianfu Wu*, Xi Song, and Hamid Krim, AOGNets: "Deep AND-OR Grammar Networks for Visual Recognition". ([arXiv:1711.05847](https://arxiv.org/abs/1711.05847))
+### Citation
 
-## Install MXNet
-```shell
-./code_sync_compile.sh
+If you find our project useful in your research, please consider citing:
+
 ```
-## How to Train
+@article{li2017aognet,
+  title={AOGNets: Deep AND-OR Grammar Networks for Visual Recognition},
+  author={Xilai Li, Tianfu Wu, Xi Song, Hamid Krim},
+  journal={arXiv preprint arXiv:1711.05847},
+  year={2017}
+}
+```
+
+## Contents
+
+1. [Introduction](#introduction)
+2. [Usage](#usage)
+3. [Results](#results)
+4. [Contacts](#contacts)
+
+## Introduction
+Introduction Here
+
+## Usage
+
+### Install MXNet
+please follow the official instruction to [install MXNet](https://mxnet.incubator.apache.org/install/index.html).
+
+### How to Train
 
 ### imagenet
 ```shell
-python train_aognet.py --cfg aognet/cfgs/aog_imagenet.yaml
+python main.py --cfg cfgs/aog_imagenet.yaml
 ```
 
 ### cifar10
 ```shell
-python train_aognet.py --cfg aognet/cfgs/aog_cifar10.yaml
+python main.py --cfg cfgs/aog_cifar10.yaml
 ```
 
 ### cifar100
 ```shell
-python train_aognet.py --cfg aognet/cfgs/aog_cifar100.yaml
+python main.py --cfg cfgs/aog_cifar100.yaml
 ```
-## Train Results
-Current best testing error on cifar10 and cifar100
+## Results
 
-| dataset       | cifar10 | cifar10+ | cifar100 | cifar100+ |
-| :------------ | :-----: | :------: | :------: | :-------: |
-| error (%)     |         |          |          |           |
 
-'+' means standard data augmentation with only random crop and mirroring.
+## Contacts
+email: xli47@ncsu.edu
+Any discussions and contribution are welcomed!
