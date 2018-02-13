@@ -1,11 +1,5 @@
 ---
-gpus: '0,1,2,3'
 batch_size: 128
-frequent: 100
-kv_store: 'device'
-memonger: False
-retrain: False
-model_load_epoch: 0
 num_epoch: 300
 network:
   num_stages: 3
@@ -40,14 +34,14 @@ AOG:
   Tnode_Op: 'Tnode_Op1'
   Anode_Op: 'Anode_Op1'
   Onode_Op: 'Onode_Op1'
-  Tnode_basic_unit: 'Bottleneck_ResNeXt'
-  Anode_basic_unit: 'Bottleneck_ResNeXt'
-  Onode_basic_unit: 'Bottleneck_ResNeXt'
+  Tnode_basic_unit: 'Bottleneck_ResNet'
+  Anode_basic_unit: 'Bottleneck_ResNet'
+  Onode_basic_unit: 'Bottleneck_ResNet'
 train:
   bn_mom: 0.9
   lr: 0.1
   mom: 0.9
-  wd: 0.0001
+  wd: 0.0005
   workspace: 512
   lr_steps:
   - 150

@@ -1,12 +1,5 @@
 ---
-gpus: '0,1,2,3'
 batch_size: 256
-frequent: 100
-kv_store: 'device'
-memonger: True
-retrain: False
-model_path: './model'
-model_load_epoch: 0
 num_epoch: 100
 network:
   num_stages: 4

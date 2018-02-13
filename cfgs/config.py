@@ -4,14 +4,7 @@ import yaml
 
 cfg = edict()
 cfg.batch_size = 64
-cfg.gpus = '0'
-cfg.frequent = 100
-cfg.kv_store = 'device'
-cfg.memonger = False
-cfg.retrain = False
-cfg.model_load_epoch = 0
 cfg.num_epoch = 300
-cfg.model_path = "./model"
 
 # network
 cfg.network = edict()
@@ -77,8 +70,10 @@ def read_cfg(cfg_file):
                         if vk in cfg[k]:
                             cfg[k][vk] = vv
                         else:
-                            raise ValueError("key {} not exist in config.py".format(vk))
+                            pass
+                            # raise ValueError("key {} not exist in config.py".format(vk))
                 else:
                     cfg[k] = v
             else:
-                raise ValueError("key {} exist in config.py".format(k))
+                pass
+                # raise ValueError("key {} exist in config.py".format(k))
