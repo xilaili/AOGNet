@@ -61,11 +61,11 @@ def main():
 
     # training setup
     kv = mx.kvstore.create(args.kv_store)
-    devs = mx.cpu() if cfg.gpus is None else [mx.gpu(int(i)) for i in args.gpus.split(',')]
+    devs = mx.cpu() if args.gpus is None else [mx.gpu(int(i)) for i in args.gpus.split(',')]
     epoch_size = max(int(cfg.dataset.num_examples / cfg.batch_size / kv.num_workers), 1)
-    if not os.path.exists(args.model_path):
-        os.makedirs(args.model_path)
-    model_prefix = os.path.join(args.model_path, 'aognet')
+    if not os.path.exists(args.modeldir):
+        os.makedirs(args.modeldir)
+    model_prefix = os.path.join(args.modeldir, 'aognet')
     checkpoint = mx.callback.do_checkpoint(model_prefix)
     arg_params = None
     aux_params = None
