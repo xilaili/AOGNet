@@ -1,4 +1,4 @@
-from .node import *
+from .node import Tnode_Op, Onode_Op, Anode_Op
 from .base import *
 from aognet.aog.aog_1d import *
 
@@ -19,21 +19,18 @@ def aog_unit(data, cfg, aog, in_channels, out_channels, stride=(1, 1), bn_mom=0.
     in_slices = [0] + in_slices
     out_slices = [0] + out_slices
 
-    if cfg.AOG.Preprocess_Op:
-        data = eval(cfg.AOG.Preprocess_Op)(data, aog, in_channels, workspace, name)
-
     NodeIdtoSym = {}
     for node in aog.node_set:
         if node.node_type == NodeType.TerminalNode:
-            eval(cfg.AOG.Tnode_Op)(data=data, cfg=cfg, aog=aog, node=node, NodeIdtoSym=NodeIdtoSym, in_slices=in_slices,
+            Tnode_Op(data=data, cfg=cfg, aog=aog, node=node, NodeIdtoSym=NodeIdtoSym, in_slices=in_slices,
                                    out_slices=out_slices, stride=stride, bn_mom=bn_mom, workspace=workspace, name=name)
     for id in aog.DFS:
         node = aog.node_set[id]
         if node.node_type == NodeType.AndNode:
-            eval(cfg.AOG.Anode_Op)(cfg=cfg, aog=aog, node=node, NodeIdtoSym=NodeIdtoSym, in_slices=in_slices,
+            Anode_Op(cfg=cfg, aog=aog, node=node, NodeIdtoSym=NodeIdtoSym, in_slices=in_slices,
                                    out_slices=out_slices, bn_mom=bn_mom, workspace=workspace, name=name)
         elif node.node_type == NodeType.OrNode:
-            eval(cfg.AOG.Onode_Op)(cfg=cfg, aog=aog, node=node, NodeIdtoSym=NodeIdtoSym, in_slices=in_slices,
+            Onode_Op(cfg=cfg, aog=aog, node=node, NodeIdtoSym=NodeIdtoSym, in_slices=in_slices,
                                    out_slices=out_slices, bn_mom=bn_mom, workspace=workspace, name=name)
     output_feat = NodeIdtoSym[aog.BFS[0]]
 
