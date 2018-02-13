@@ -31,13 +31,13 @@ An AOGNet consists of a number of stages each of which is composed of a number o
 please follow the official instruction to [install MXNet](https://mxnet.incubator.apache.org/install/index.html).
 
 ### Train on CIFAR-10/100 dataset
-As an example, use the following command to train an AOGNet on CIFAR-10, using two GPUs (gpu_id=0,1). 
+As an example, use the following command to train an AOGNet on CIFAR-10 with training setup and network configuration defined in [cfgs/aog_cifar10.yaml](cfgs/aog_cifar10.yaml), using two GPUs (gpu_id=0,1). 
 ```shell
 python main.py --cfg cfgs/aog_cifar10.yaml --gpus 0,1
 ```
 
 ### Train on ImageNet-1K dataset
-Use following command to train an AOGNet on ImageNet-1K, using four GPUs. 
+Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/aog_imagenet.yaml](cfgs/aog_imagenet.yaml), using four GPUs. 
 ```shell
 python main.py --cfg cfgs/aog_imagenet.yaml --gpus 0,1,2,3
 ```
