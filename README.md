@@ -31,18 +31,39 @@ An AOGNet consists of a number of stages each of which is composed of a number o
 please follow the official instruction to [install MXNet](https://mxnet.incubator.apache.org/install/index.html).
 
 ### Train on CIFAR-10/100 dataset
-As an example, use the following command to train an AOGNet on CIFAR-10 with training setup and network configuration defined in [cfgs/aog_cifar10.yaml](cfgs/aog_cifar10.yaml), using two GPUs (gpu_id=0,1). 
+As an example, use the following command to train an AOGNet on CIFAR-10 with training setup and network configuration defined in [cfgs/cifar10/aognet_cifar10_ps_4_bottleneck_1M.yaml](cfgs/cifar10/aognet_cifar10_ps_4_bottleneck_1M.yaml), using two GPUs (gpu_id=0,1). 
 ```shell
-python main.py --cfg cfgs/aog_cifar10.yaml --gpus 0,1
+python main.py --cfg cfgs/cifar10/aognet_cifar10_ps_4_bottleneck_1M.yaml --gpus 0,1
 ```
 
 ### Train on ImageNet-1K dataset
-Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/aog_imagenet.yaml](cfgs/aog_imagenet.yaml), using four GPUs. 
+Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/imagenet/aognet_imagenet_1k_v1.yaml](cfgs/imagenet/aognet_imagenet_1k_v1.yaml), using four GPUs and memonger. 
 ```shell
-python main.py --cfg cfgs/aog_imagenet.yaml --gpus 0,1,2,3
+python main.py --cfg cfgs/imagenet/aognet_imagenet_1k_v1.yaml --gpus 0,1,2,3 --memonger
 ```
 
 ## Results
+
+### Results on CIFAR
+
+| Model | Params | CIFAR-10 (%) | CIFAR-100 (%)|
+|---|---|---|---|
+| AOGNet-4-(1,1,1) | 1.0M | 5.29 | 25.98 |
+| AOGNet-4-(1,1,1) | 8.1M | 4.02 | 20.64 |
+| AOGNet-4-(1,1,1) | 16.0M | 3.79 | 19.50 |
+| AOGNet-BN-4-(1,1,1) | 1.0M | 4.74 | 22.81 |
+| AOGNet-BN-4-(1,1,1) | 8.0M | 3.99 | 18.71 |
+| AOGNet-BN-4-(1,2,1) | 16.0M | 3.78 | 17.82 |
+
+### Results on ImageNet
+
+| Model | Params | Top-1 Err. | Top-5 Err. | MXNet Model |
+|---|---|---|---|---|
+| AOGNet-BN-4-(1,1,1,1) | 79.5M | 21.49 | 5.76 | [Download](https://drive.google.com/open?id=1BWFchuwne-QsItJX10PDv87yGSu0ruL3) |
+
+### Training logs and pretrained models
+
+Our trained models and training logs are downloadable at [Google Drive](https://drive.google.com/open?id=10DqN-ylDF_fFgvFmewnm1NEoqQCa1UAB)
 
 
 ## Contacts
