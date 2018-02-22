@@ -37,6 +37,9 @@ python main.py --cfg cfgs/cifar10/aognet_cifar10_ps_4_bottleneck_1M.yaml --gpus 
 ```
 
 ### Train on ImageNet-1K dataset
+
+To prepare the trainin dataset (.rec file) for ImageNet-1k, please follow the [mxnet image classfication repo](https://github.com/apache/incubator-mxnet/tree/master/example/image-classification#prepare-datasets). 
+
 Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/imagenet/aognet_imagenet_1k_v1.yaml](cfgs/imagenet/aognet_imagenet_1k_v1.yaml), using four GPUs and memonger. Memonger[1] is an effective way to save GPU memory when the GPU resource is limited. 
 ```shell
 python main.py --cfg cfgs/imagenet/aognet_imagenet_1k_v1.yaml --gpus 0,1,2,3 --memonger
@@ -55,6 +58,8 @@ python main.py --cfg cfgs/imagenet/aognet_imagenet_1k_v1.yaml --gpus 0,1,2,3 --m
 | AOGNet-BN-4-(1,1,1) | 8.0M | 3.99 | 18.71 |
 | AOGNet-BN-4-(1,2,1) | 16.0M | 3.78 | 17.82 |
 
+The training is done with standard random crop and flip data augmentation.
+
 ### Results on ImageNet
 
 | Model | Params | Top-1 Err. | Top-5 Err. | MXNet Model |
@@ -67,7 +72,7 @@ Our trained models and training logs are downloadable at [Google Drive](https://
 
 
 ## References
-1. Tianqi Chen, Bing Xu, Chiyuan Zhang, Carlos Guestrin, Training Deep Nets with Sublinear Memory Cost, [arXiv:1604.06174](https://arXiv:1604.06174), [https://github.com/dmlc/mxnet-memonger](https://github.com/dmlc/mxnet-memonger)
+1. Tianqi Chen, Bing Xu, Chiyuan Zhang, Carlos Guestrin, Training Deep Nets with Sublinear Memory Cost, [arXiv:1604.06174](https://arxiv.org/abs/1604.06174), [https://github.com/dmlc/mxnet-memonger](https://github.com/dmlc/mxnet-memonger)
 
 
 ## Contacts
