@@ -38,7 +38,7 @@ python main.py --cfg cfgs/cifar10/aognet_cifar10_ps_4_bottleneck_1M.yaml --gpus 
 
 ### Train on ImageNet-1K dataset
 
-To prepare the trainin dataset (.rec file) for ImageNet-1k, please follow the [mxnet image classfication repo](https://github.com/apache/incubator-mxnet/tree/master/example/image-classification#prepare-datasets). 
+To prepare the trainin dataset (.rec file) for ImageNet-1k, please follow the [mxnet image classfication repo](https://github.com/apache/incubator-mxnet/tree/master/example/image-classification#prepare-datasets) or this [mxnet resnet implementation by Tornadomeet](https://github.com/tornadomeet/ResNet).
 
 Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/imagenet/aognet_imagenet_1k_v1.yaml](cfgs/imagenet/aognet_imagenet_1k_v1.yaml), using four GPUs and memonger. Memonger[1] is an effective way to save GPU memory when the GPU resource is limited. 
 ```shell
