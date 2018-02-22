@@ -37,7 +37,7 @@ python main.py --cfg cfgs/cifar10/aognet_cifar10_ps_4_bottleneck_1M.yaml --gpus 
 ```
 
 ### Train on ImageNet-1K dataset
-Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/imagenet/aognet_imagenet_1k_v1.yaml](cfgs/imagenet/aognet_imagenet_1k_v1.yaml), using four GPUs and memonger. 
+Use following command to train an AOGNet on ImageNet-1K with training setup and network configuration defined in [cfgs/imagenet/aognet_imagenet_1k_v1.yaml](cfgs/imagenet/aognet_imagenet_1k_v1.yaml), using four GPUs and memonger. Memonger[1] is an effective way to save GPU memory when the GPU resource is limited. 
 ```shell
 python main.py --cfg cfgs/imagenet/aognet_imagenet_1k_v1.yaml --gpus 0,1,2,3 --memonger
 ```
@@ -64,6 +64,10 @@ python main.py --cfg cfgs/imagenet/aognet_imagenet_1k_v1.yaml --gpus 0,1,2,3 --m
 ### Training logs and pretrained models
 
 Our trained models and training logs are downloadable at [Google Drive](https://drive.google.com/open?id=10DqN-ylDF_fFgvFmewnm1NEoqQCa1UAB)
+
+
+## References
+1. Tianqi Chen, Bing Xu, Chiyuan Zhang, Carlos Guestrin, Training Deep Nets with Sublinear Memory Cost, [arXiv:1604.06174](https://arXiv:1604.06174), [https://github.com/dmlc/mxnet-memonger](https://github.com/dmlc/mxnet-memonger)
 
 
 ## Contacts
