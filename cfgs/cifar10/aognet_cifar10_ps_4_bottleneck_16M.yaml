@@ -1,17 +1,17 @@
 ---
-batch_size: 128
+batch_size: 64
 num_epoch: 300
 network:
   num_stages: 3
   units:
   - 1
-  - 1
+  - 2
   - 1
   filter_list:
-  - 64
-  - 256
-  - 512
-  - 1024
+  - 54
+  - 218
+  - 431
+  - 864
   dropout: 0.0
 AOG:
   dims:
@@ -25,16 +25,16 @@ AOG:
   Onode_basic_unit: 'Bottleneck_ResNet'
 train:
   bn_mom: 0.9
-  lr: 0.1
+  lr: 0.01
   mom: 0.9
-  wd: 0.0005
+  wd: 0.0001
   workspace: 512
   lr_steps:
   - 150
   - 225
 dataset:
-  data_type: 'cifar100'
-  data_dir: './data/cifar100'
-  num_classes: 100
+  data_type: 'cifar10'
+  data_dir: './data/cifar10'
+  num_classes: 10
   num_examples: 50000
   aug_level: 1

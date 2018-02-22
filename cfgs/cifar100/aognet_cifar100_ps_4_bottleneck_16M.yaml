@@ -5,13 +5,13 @@ network:
   num_stages: 3
   units:
   - 1
-  - 1
+  - 2
   - 1
   filter_list:
-  - 64
-  - 256
-  - 512
-  - 1024
+  - 53
+  - 215
+  - 431
+  - 862
   dropout: 0.0
 AOG:
   dims:
@@ -38,3 +38,4 @@ dataset:
   num_classes: 100
   num_examples: 50000
   aug_level: 1
+

@@ -8,11 +8,11 @@ network:
   - 1
   - 1
   filter_list:
-  - 64
-  - 256
-  - 512
-  - 1024
-  dropout: 0.0
+  - 16
+  - 22
+  - 44
+  - 93
+  dropout: 0.1
 AOG:
   dims:
   - 4
@@ -20,9 +20,9 @@ AOG:
   - 4
   or_node_op: 'sum'
   TURN_OFF_UNIT_OR_NODE: True
-  Tnode_basic_unit: 'Bottleneck_ResNet'
-  Anode_basic_unit: 'Bottleneck_ResNet'
-  Onode_basic_unit: 'Bottleneck_ResNet'
+  Tnode_basic_unit: 'Conv_BN_ReLu'
+  Anode_basic_unit: 'Conv_BN_ReLu'
+  Onode_basic_unit: 'Conv_BN_ReLu'
 train:
   bn_mom: 0.9
   lr: 0.1

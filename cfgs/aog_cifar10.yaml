@@ -18,16 +18,7 @@ AOG:
   - 4
   - 4
   - 4
-  min_sizes:
-  - 1
-  - 1
-  - 1
-  tnode_max_size:
-  - 4
-  - 4
-  - 4
   or_node_op: 'sum'
-  USE_OR_NODE_CONV: True
   TURN_OFF_UNIT_OR_NODE: True
   Tnode_basic_unit: 'Bottleneck_ResNet'
   Anode_basic_unit: 'Bottleneck_ResNet'

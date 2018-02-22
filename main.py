@@ -24,7 +24,7 @@ def main():
     # get symbol
     aogs = []
     for i in range(len(cfg.AOG.dims)):
-        aog = get_aog(dim=cfg.AOG.dims[i], min_size=cfg.AOG.min_sizes[i], tnode_max_size=cfg.AOG.tnode_max_size[i],
+        aog = get_aog(dim=cfg.AOG.dims[i], min_size=1, tnode_max_size=cfg.AOG.dims[i],
                       turn_off_unit_or_node=cfg.AOG.TURN_OFF_UNIT_OR_NODE)
         aogs.append(aog)
 

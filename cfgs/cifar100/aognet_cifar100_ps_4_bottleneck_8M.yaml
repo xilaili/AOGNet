@@ -8,10 +8,10 @@ network:
   - 1
   - 1
   filter_list:
-  - 64
-  - 256
-  - 512
-  - 1024
+  - 41
+  - 165
+  - 330
+  - 660
   dropout: 0.0
 AOG:
   dims:

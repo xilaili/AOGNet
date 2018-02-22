@@ -10,26 +10,19 @@ cfg.num_epoch = 300
 cfg.network = edict()
 cfg.network.num_stages = 3
 cfg.network.units = [1, 1, 1]                # length should be n_stages
-cfg.network.filter_list = [16, 64, 128, 256] # length should be (n_stages + 1), important for training
-cfg.network.dropout = 0.0                    # good for training
+cfg.network.filter_list = [16, 64, 128, 256] # length should be (n_stages + 1)
+cfg.network.dropout = 0.0
 
 # AOG configuration
 cfg.AOG = edict()
-cfg.AOG.dims = [4, 4, 4]                 # length should be n_stages
-cfg.AOG.min_sizes = [1, 1, 1]            # length should be n_stages
-cfg.AOG.tnode_max_size = [4, 4, 4]       # the maximum size of tnode allowed
+cfg.AOG.dims = [4, 4, 4]                 # lenght must be n_stages
 cfg.AOG.or_node_op = 'sum'               # choice: ['sum', 'max']
-cfg.AOG.USE_OR_NODE_CONV = True          # pretty useful
-cfg.AOG.TURN_OFF_UNIT_OR_NODE = False    # turn off or-node with size 1, better to use False
-cfg.AOG.Tnode_basic_unit = 'basic_unit1'
-cfg.AOG.Anode_basic_unit = 'basic_unit1'
-cfg.AOG.Onode_basic_unit = 'basic_unit1'
+cfg.AOG.TURN_OFF_UNIT_OR_NODE = False    # turn off or-node with size 1
+cfg.AOG.Tnode_basic_unit = ''
+cfg.AOG.Anode_basic_unit = ''
+cfg.AOG.Onode_basic_unit = ''
 '''
-basic_unit1: conv_bn_relu
-basic_unit2: conv_bn_relu + sc
-basic_unit3: conv_bn_relu x 2 + sc
-basic_unit4: bottleneck + sc (ratio=0.5)
-basic_unit5: bottleneck + sc (ratio=0.25)
+choices: ['Conv_BN_ReLu', 'Bottleneck_ResNet', 'Bottleneck_ResNeXt']
 '''
 
 # Train
@@ -65,10 +58,8 @@ def read_cfg(cfg_file):
                         if vk in cfg[k]:
                             cfg[k][vk] = vv
                         else:
-                            pass
-                            # raise ValueError("key {} not exist in config.py".format(vk))
+                            raise ValueError("key {} not exist in config.py".format(vk))
                 else:
                     cfg[k] = v
             else:
-                pass
-                # raise ValueError("key {} exist in config.py".format(k))
+                raise ValueError("key {} exist in config.py".format(k))

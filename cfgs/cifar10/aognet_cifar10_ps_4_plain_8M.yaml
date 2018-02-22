@@ -1,5 +1,5 @@
 ---
-batch_size: 128
+batch_size: 64
 num_epoch: 300
 network:
   num_stages: 3
@@ -8,11 +8,11 @@ network:
   - 1
   - 1
   filter_list:
+  - 16
   - 64
+  - 128
   - 256
-  - 512
-  - 1024
-  dropout: 0.0
+  dropout: 0.1
 AOG:
   dims:
   - 4
@@ -20,21 +20,21 @@ AOG:
   - 4
   or_node_op: 'sum'
   TURN_OFF_UNIT_OR_NODE: True
-  Tnode_basic_unit: 'Bottleneck_ResNet'
-  Anode_basic_unit: 'Bottleneck_ResNet'
-  Onode_basic_unit: 'Bottleneck_ResNet'
+  Tnode_basic_unit: 'Conv_BN_ReLu'
+  Anode_basic_unit: 'Conv_BN_ReLu'
+  Onode_basic_unit: 'Conv_BN_ReLu'
 train:
   bn_mom: 0.9
   lr: 0.1
   mom: 0.9
-  wd: 0.0005
+  wd: 0.0001
   workspace: 512
   lr_steps:
   - 150
   - 225
 dataset:
-  data_type: 'cifar100'
-  data_dir: './data/cifar100'
-  num_classes: 100
+  data_type: 'cifar10'
+  data_dir: './data/cifar10'
+  num_classes: 10
   num_examples: 50000
   aug_level: 1

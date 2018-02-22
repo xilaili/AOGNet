@@ -65,7 +65,7 @@ def get_symbol(aogs, cfg):
     workspace = cfg.train.workspace
 
     data = mx.sym.Variable(name='data')
-    # data = mx.sym.BatchNorm(data=data, fix_gamma=True, eps=eps, momentum=bn_mom, name='bn_data')
+    data = mx.sym.BatchNorm(data=data, fix_gamma=True, eps=eps, momentum=bn_mom, name='bn_data')
 
     if data_type == 'imagenet':
         body = conv_bn_relu(data=data, cfg=cfg, num_filters=filter_list[0], kernel=(7, 7), stride=(2, 2), pad=(3, 3), bn_mom=bn_mom,
