@@ -57,7 +57,7 @@ def Onode_Op(cfg, aog, node, NodeIdtoSym, in_slices, out_slices, bn_mom=0.9, wor
     arr = aog.primitive_set[node.array_idx]
     num_filters = out_slices[arr.x2 + 1] - out_slices[arr.x1]
     Onode_out = eval(cfg.AOG.Onode_basic_unit)(data=Onode_out, cfg=cfg, num_filters=num_filters,
-                                                in_channels=num_filters,
-                                                bn_mom=bn_mom, workspace=workspace,
-                                                name=name + "Onode_{}".format(node.id))
+                                               in_channels=num_filters,
+                                               bn_mom=bn_mom, workspace=workspace,
+                                               name=name + "Onode_{}".format(node.id))
     NodeIdtoSym[node.id] = Onode_out
