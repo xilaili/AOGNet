@@ -4,7 +4,7 @@ import os
 import pprint
 import mxnet as mx
 import symbol.symbol_aognet as AOGNet
-import aognet.utils.memonger
+import aognet.utils.memonger as memonger
 from aognet.aog.aog_1d import get_aog
 from cfgs.config import cfg, read_cfg
 from aognet.loader import *
