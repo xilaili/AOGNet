@@ -1,4 +1,4 @@
-## The new version code and pretrained models are available at [https://github.com/iVMCL/AOGNets] (https://github.com/iVMCL/AOGNets), and more code and models will be released. 
+## The new version code and pretrained models are available at [https://github.com/iVMCL/AOGNets](https://github.com/iVMCL/AOGNets), and more code and models will be released. 
 # Learning Deep Compositional Grammatical Architectures for Visual Recognition
 This repository contains the code (in MXNet) for our CVPR2019 paper: "[Learning Deep Compositional Grammatical Architectures for Visual Recognition](https://arxiv.org/abs/1711.05847)" paper by [Xilai Li](https://xilaili.github.io), [Tianfu Wu](http://www4.ncsu.edu/~twu19/)\*, Xi Song. (* Corresponding Author)
 
